@@ -86,12 +86,12 @@ jobs:
     - name: Download package
       working-directory: ./openwrt
       run: |
-        make download -j$(nproc)
+        make download -j10
         
     - name: Build firmware
       working-directory: ./openwrt
       run: |
-        #echo -e "$(nproc) thread build."
+        echo -e "$(nproc) thread build."
         make -j$(nproc) || make -j1 V=s
         echo "======================="
         echo "Space usage:"
@@ -102,28 +102,26 @@ jobs:
         du -h --max-depth=1 ./build_dir
         du -h --max-depth=1 ./bin
         
-        - name: Prepare artifact
-        run: |
-          mkdir -p ./artifact/package
-          mkdir -p ./artifact/buildinfo
-          rm -rf $(find ./bin/targets/ -type d -name "packages")
-          cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
-          cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
-
-        - name: Upload buildinfo
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_buildinfo
-          path: ./artifact/buildinfo/
-
-        - name: Upload package
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_package
-          path: ./artifact/package/
-
-        - name: Upload firmware
-        uses: actions/upload-artifact@v3
-        with:
-          name: OpenWrt_firmware
-          path: ./bin/targets/
+    - name: Prepare artifact
+      working-directory: ./openwrt
+      run: |
+        mkdir -p ./artifact/package
+        mkdir -p ./artifact/buildinfo
+        rm -rf $(find ./bin/targets/ -type d -name "packages")
+        cp -rf $(find ./bin/packages/ -type f -name "*.ipk") ./artifact/package/
+        cp -rf $(find ./bin/targets/ -type f -name "*.buildinfo" -o -name "*.manifest") ./artifact/buildinfo/
+    - name: Upload buildinfo
+      uses: actions/upload-artifact@master
+      with:
+        name: OpenWrt_buildinfo
+        path: ./openwrt/artifact/buildinfo/
+    - name: Upload package
+      uses: actions/upload-artifact@master
+      with:
+        name: OpenWrt_package
+        path: ./openwrt/artifact/package/
+    - name: Upload firmware
+      uses: actions/upload-artifact@master
+      with:
+        name: OpenWrt_firmware
+        path: ./openwrt/bin/targets/

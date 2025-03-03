@@ -11,8 +11,9 @@ on:
     types: [published]
   push:
     branches: 
-      - master
+      # - master
       - dev
+      - dev-self
   # schedule:
   #  - cron: 0 0 */11 * *
   watch:

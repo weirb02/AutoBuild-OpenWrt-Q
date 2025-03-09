@@ -93,8 +93,10 @@ jobs:
     - name: Build firmware
       working-directory: ./openwrt
       run: |
-        echo -e "$(nproc) thread build."
-        make -j$(nproc) || make -j1 V=s
+        # echo -e "$(nproc) thread build."
+        # make -j$(nproc) || make -j1 V=s
+        echo -e "Single thread build."
+        make -j1 || make -j1 V=s
         echo "======================="
         echo "Space usage:"
         echo "======================="

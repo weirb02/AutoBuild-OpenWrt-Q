@@ -24,6 +24,9 @@ jobs:
     # runs-on: ubuntu-22.04
     runs-on: self-hosted
     timeout-minutes: 2880
+    env:
+      # GITHUB_TOKEN: ${env:PATH}
+      GITHUB_TOKEN: ${{ secrets.runner-id }}
     if: github.event.repository.owner.id == github.event.sender.id
 
     steps:
